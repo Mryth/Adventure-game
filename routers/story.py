@@ -44,6 +44,12 @@ def create_story(
     db.commit()
 
     # TODO: add background tasks, generate story
+    background_tasks.add_task(
+        generate_story_task,
+        job_id = job_id,
+        theme = request.theme,
+        session_id = session_id
+    )
     return job
 
 def generate_story_task(job_id: str, theme:str, session_id: str):
@@ -73,7 +79,18 @@ def generate_story_task(job_id: str, theme:str, session_id: str):
     
     finally:
         db.close()
-        
+
+#retrieve the finished story
+
+@router.get("/{story_id}/complete", response_model=CompleteStoryResponse)
+def get_complete_story(story_id: int, db: Session=Depends(get_db)):
+    story = db.query(Story).filter(Story.id == story_id).first()
+    if not story:
+        raise HTTPException(status_code = 404, detail="Story not found")
+    # todo: parsde story
+    return story
 
 
+def build_complete_story_tree(db:Session, story: Story) -> CompleteStoryNodeResponse:
+    pass
 

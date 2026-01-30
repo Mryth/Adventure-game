@@ -1,6 +1,7 @@
 from typing import List
 from pydantic_settings import BaseSettings
 from pydantic import field_validator
+#the config for variables and settings
 
 #pydantic is for data validation !!
 # we take the variables we map them into python object !
